@@ -9,8 +9,8 @@ function Greeting({initialName = ''}) {
   )
 
   useEffect(() => {
-    window.localStorage.getItem('name')
-  })
+    window.localStorage.setItem('name', name)
+  }, [name])
 
   function handleChange(event) {
     setName(event.target.value)
