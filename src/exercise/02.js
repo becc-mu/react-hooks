@@ -1,20 +1,45 @@
 // useEffect: persistent state
 // http://localhost:3000/isolated/exercise/02.js
+import React, {useState, useEffect} from 'react'
 
-import React, {useEffect} from 'react'
+function useLocalStorageState(
+  key,
+  defaultValue = '',
+  {serialise = JSON.stringify, deserialise = JSON.parse} = {},
+) {
+  const [state, setState] = useState(() => {
+    const valueInLocalStorage = window.localStorage.getItem(key)
+    if (valueInLocalStorage) {
+      try {
+        return deserialise(valueInLocalStorage)
+      } catch (error) {
+        window.localStorage.removeItem(key)
+      }
+    }
+    return typeof defaultValue === 'function' ? defaultValue() : defaultValue
+  })
 
-function Greeting({initialName = ''}) {
-  const [name, setName] = React.useState(
-    () => window.localStorage.getItem('name') || initialName,
-  )
+  const prevKeyRef = React.useRef(key)
 
   useEffect(() => {
-    window.localStorage.setItem('name', name)
-  }, [name])
+    const prevKey = prevKeyRef.current
+    if (prevKey !== key) {
+      window.localStorage.removeItem(prevKey)
+    }
+    prevKeyRef.current = key
+    window.localStorage.setItem(key, serialise(state))
+  }, [key, state, serialise])
+  console.log(state)
+  return [state, setState]
+}
+
+function Greeting({initialName = ''}) {
+  const [name, setName] = useLocalStorageState('name', initialName)
 
   function handleChange(event) {
     setName(event.target.value)
   }
+
   return (
     <div>
       <form>
@@ -27,7 +52,7 @@ function Greeting({initialName = ''}) {
 }
 
 function App() {
-  return <Greeting initialName={'minibot'} />
+  return <Greeting />
 }
 
 export default App
