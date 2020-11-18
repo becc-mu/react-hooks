@@ -28,18 +28,6 @@ function PokemonInfo({pokemonName}) {
       error => setError(error),
     )
   }, [pokemonName])
-
-  // 🐨 Have state for the pokemon (null)
-  // 🐨 use React.useEffect where the callback should be called whenever the
-  // pokemon name changes.
-  // 💰 DON'T FORGET THE DEPENDENCIES ARRAY!
-  // 💰 if the pokemonName is falsy (an empty string) then don't bother making the request (exit early).
-  // 🐨 before calling `fetchPokemon`, make sure to update the loading state
-  // 💰 Use the `fetchPokemon` function to fetch a pokemon by its name:
-  //   fetchPokemon('Pikachu').then(
-  //     pokemonData => { /* update all the state here */},
-  //   )
-  // 🐨 return the following things based on the `pokemon` state and `pokemonName` prop:
   if (error) {
     return (
       <div role="alert">
@@ -54,11 +42,6 @@ function PokemonInfo({pokemonName}) {
   } else {
     return <PokemonDataView pokemon={pokemon} />
   }
-  //   1. no pokemonName: 'Submit a pokemon'
-  //   2. pokemonName but no pokemon: <PokemonInfoFallback name={pokemonName} />
-  //   3. pokemon: <PokemonDataView pokemon={pokemon} />
-  // 💣 remove this
-  // return 'TODO'
 }
 
 function App() {
